@@ -1,5 +1,6 @@
+const path = require('path');
 const Koa = require('koa');
-const bodyParser = require('koa-bodyparser');
+const koaBody = require('koa-body');
 const error = require('koa-json-error');
 const parameter = require('koa-parameter');
 const mongoose = require('mongoose');
@@ -23,8 +24,17 @@ app.use(error({
   // 定制返回格式
   postFormat: (err, { stack, ...rest }) => process.env.NODE_ENV === 'production' ? rest : { stack, ...rest },
 }));
-app.use(bodyParser());
-app.use(parameter(app)); // 传入 app 参数，从而在 ctx 中加入一个方法进行校验
+
+app.use(koaBody({
+  multipart: true, // 支持文件
+  formidable: { // multipart parser
+    uploadDir: path.join(__dirname, '/public/uploads'),
+    keepExtensions: true, // 保留文件后缀名
+    multiples: false,
+  },
+}));
+
+app.use(parameter(app)); // 传入 app 参数，从而在 ctx 中加入 verifyParams 方法进行校验
 routing(app);
 
 app.listen(3000, () => console.log('Server is running at port 3000'));
