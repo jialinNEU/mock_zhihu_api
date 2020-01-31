@@ -24,7 +24,7 @@ const app = new Koa();
 app.use(koaStatic(path.join(__dirname, 'public')));
 
 app.use(error({
-  // 定制返回格式
+  // 定制错误返回格式
   postFormat: (err, { stack, ...rest }) => process.env.NODE_ENV === 'production' ? rest : { stack, ...rest },
 }));
 
