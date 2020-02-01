@@ -168,6 +168,11 @@ class UsersController {
     }
     ctx.status = 204;
   }
+
+  async listQuestions(ctx) {
+    const questions = await Question.find({ questioner: ctx.params.id });
+    ctx.body = questions;
+  }
 }
 
 module.exports = new UsersController();
