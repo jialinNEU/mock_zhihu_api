@@ -7,7 +7,7 @@ class TopicsController {
     const page = Math.max(ctx.query.page * 1, 1) - 1;
     const perPage = Math.max(per_page * 1, 1);
     ctx.body = await Topic
-                .find({ name: new RegExp(ctx.query.q) })
+                .find({ name: new RegExp(ctx.query.q) }) // 模糊搜索
                 .limit(perPage) // 限制每页数量
                 .skip(page * perPage); // 跳过前n项，第一页跳过前 0 项
   }
