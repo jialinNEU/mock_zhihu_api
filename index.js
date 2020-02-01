@@ -15,6 +15,7 @@ mongoose.connect(
   process.env.MONGODB_CONNECTION, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   }, () => console.log('MongoDB 连接成功')
 );
 mongoose.connection.on('error', console.error); // 监听错误
