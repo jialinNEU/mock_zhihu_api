@@ -4,6 +4,7 @@ const {
   find, findById, create, update, del,
   login, checkOwner, checkUserExist,
   listFollowing, listFollowers, follow, unfollow,
+  listFollowingTopics, followTopic, unfollowTopic,
 } = require('../controllers/users');
 
 // 自定义用户认证
@@ -38,5 +39,10 @@ router.get('/:id/following', listFollowing);
 router.get('/:id/followers', listFollowers);
 router.put('/following/:id', auth, checkUserExist, follow);
 router.delete('/following/:id', auth, checkUserExist, unfollow);
+
+/* 话题模块相关接口 */
+router.get('/:id/followingTopics', listFollowingTopics);
+router.put('/followingTopics/:id', auth, checkTopicExist, followTopic);
+router.delete('/followingTopics/:id', auth, checkTopicExist, unfollowTopic);
 
 module.exports = router;

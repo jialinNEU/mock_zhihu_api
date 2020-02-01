@@ -9,19 +9,19 @@ const userSchema = new Schema({
   avatar_url: { type: String },
   gender: { type: String, enum: ['male', 'female'], default: 'male', required: true },
   headline: { type: String },
-  locations: { type: [{ type: String }], select: false }, // todo
-  business: { type: String, select: false }, // todo
+  locations: { type: [{ type: Schema.Types.ObjectId, ref: 'Topic' }], select: false }, // 话题引用
+  business: { type: Schema.Types.ObjectId, ref: 'Topic', select: false }, // 话题引用
   employments: {
     type: [{
-      company: { type: String }, // todo
-      job: { type: String }, // todo
+      company: { type: Schema.Types.ObjectId, ref: 'Topic' }, // 话题引用
+      job: { type: Schema.Types.ObjectId, ref: 'Topic' }, // 话题引用
     }],
     select: false,
   },
   educations: {
     type: [{
-      school: { type: String },
-      major: { type: String },
+      school: { type: Schema.Types.ObjectId, ref: 'Topic' }, // 话题引用
+      major: { type: Schema.Types.ObjectId, ref: 'Topic' }, // 话题引用
       diploma: { type: Number, enum: [1, 2, 3, 4, 5] },
       entrance_year: { type: Number },
       graduation_year: { type: Number },
@@ -30,6 +30,10 @@ const userSchema = new Schema({
   },
   following: {
     type: [{ type: Schema.Types.ObjectId, ref: 'User' }], // 与名字为 User 的 Schema 相关联
+    select: false,
+  },
+  followingTopics: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
     select: false,
   },
 });

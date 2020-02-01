@@ -19,7 +19,16 @@ class UsersController {
         .filter(f => f) // 过滤空字符串
         .map(f => ' +' + f)
         .join('');
-    const user = await User.findById(ctx.params.id).select(selectFields);
+    const populateStr = fields.split(';').filter(f => f).map(f => {
+      if (f === 'employments') {
+        return 'employments.company employments.job';
+      }
+      if (f === 'educations') {
+        return 'educations.school educations.major';
+      }
+      return f;
+    }).join(' ');
+    const user = await User.findById(ctx.params.id).select(selectFields).populate(populateStr);
     if (!user) {
       ctx.throw(404, '用户不存在');
     }
@@ -128,6 +137,33 @@ class UsersController {
     const index = me.following.map(id => id.toString()).indexOf(ctx.params.id);
     if (index > -1) {
       me.following.splice(index, 1);
+      me.save();
+    }
+    ctx.status = 204;
+  }
+
+  async listFollowingTopics(ctx) {
+    const user = await User.findById(ctx.params.id).select('+followingTopics').populate('followingTopics');
+    if (!user) {
+      ctx.throw(404, '用户不存在');
+    }
+    ctx.body = user.followingTopics;
+  }
+
+  async followTopic(ctx) {
+    const me = await User.findById(ctx.state.user._id).select('+followingTopics');
+    if (!me.followingTopics.map(id => id.toString()).includes(ctx.params.id)) {
+      me.followTopic.push(ctx.params.id);
+      me.save();
+    }
+    ctx.status = 204;
+  }
+
+  async unfollowTopic(ctx) {
+    const me = await User.findById(ctx.state.user._id).select('+followingTopics');
+    const index = me.followingTopics.map(id => id.toString()).includes(ctx.params.id);
+    if (index > -1) {
+      me.followingTopics.splice(index, 1);
       me.save();
     }
     ctx.status = 204;
