@@ -6,7 +6,12 @@ const {
   listFollowing, listFollowers, follow, unfollow,
   listFollowingTopics, followTopic, unfollowTopic,
   listQuestions,
+  listLikingAnswers, likeAnswer, unlikeAnswer,
+  listDislikingAnswers, dislikeAnswer, undislikeAnswer,
+  listCollectingAnswers, collectAnswer, uncollectAnswer,
 } = require('../controllers/users');
+const { checkTopicExist } = require('../controllers/topics');
+const { checkAnswerExist } = require('../controllers/answers');
 
 // 自定义用户认证
 // const auth = async (ctx, next) => {
@@ -48,5 +53,16 @@ router.delete('/followingTopics/:id', auth, checkTopicExist, unfollowTopic);
 
 /* 问题模块相关接口 */
 router.get('/:id/questions', listQuestions);
+
+/* 答案模块相关接口 */
+router.get('/:id/likingAnswers', listLikingAnswers);
+router.put('/likingAnswers/:id', auth, checkAnswerExist, likeAnswer, undislikeAnswer);
+router.delete('/likingAnswers/:id', auth, checkAnswerExist, unlikeAnswer);
+router.get('/:id/dislikingAnswers', listDislikingAnswers);
+router.put('/dislikingAnswers/:id', auth, checkAnswerExist, dislikeAnswer, unlikeAnswer);
+router.delete('/dislikingAnswers/:id', auth, checkAnswerExist, undislikeAnswer);
+router.get('/:id/collectingAnswers', listCollectingAnswers);
+router.put('/collectingAnswers/:id', auth, checkAnswerExist, collectAnswer);
+router.delete('/collectingAnswers/:id', auth, checkAnswerExist, uncollectAnswer);
 
 module.exports = router;

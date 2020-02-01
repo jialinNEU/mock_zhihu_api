@@ -36,7 +36,7 @@ const userSchema = new Schema({
     type: [{ type: Schema.Types.ObjectId, ref: 'Topic' }],
     select: false,
   },
-});
+}, { timestamps: true });
 
 module.exports = model(
   'User', // 集合名称

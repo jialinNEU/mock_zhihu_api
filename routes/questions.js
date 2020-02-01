@@ -1,14 +1,13 @@
 const jwt = require('koa-jwt');
 const Router = require('koa-router');
-const router = new Router({ prefix: '/questions' });
 const {
   find, findById, create, update, del,
   checkQuestionExist, checkQuestioner,
 } = require('../controllers/questions');
 
-const { secret } = require('../config');
+const auth = jwt({ secret: process.env.JWT_SECRET });
 
-const auth = jwt({ secret });
+const router = new Router({ prefix: '/questions' });
 
 router.get('/', find);
 router.post('/', auth, create);
